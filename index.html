@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="https://fonts.googleapis.com/css?family=Libre+Baskerville&display=swap" rel="stylesheet">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+		<style type = "text/css">
+			body, html {
+				padding: 0;
+				margin: 0;
+				min-height: 100%;
+				min-width: 100%;
+				font-family: 'Libre Baskerville', serif;
+				background-color: #FFCC00;
+			}
+
+			button {
+				background-color: #000;
+				border: none;
+				padding-bottom: .9%;
+				padding-top: .9%;
+				padding-right: 2%;
+				padding-left: 2%;
+				color: #FFCC00;
+				font-weight: bolder;
+
+				-wsebkit-transition: all .3s ease;
+				-moz-transition: all .3s ease;
+				-ms-transition: all .3s ease;
+				-o-transition: all .3s ease;
+				transition: .3s ease;
+			}
+
+			h3 {
+				color: #000;
+				font-weight: bolder;
+			}
+
+			button:hover {
+				background-color: #FFCC00;
+				color: #000;
+			}
+
+			input[type=text]:focus {
+				outline: none;
+			}
+
+			#list-container {
+				position: absolute;
+				top: 45%;
+				left: 32%;
+			}
+
+			#list-container li {
+				font-size: 160%;
+				list-style: none;
+				font-weight: bolder;
+				color: #000;
+			}
+
+			#input-container {
+				margin-top: 20%;
+				text-align: center;
+			}
+
+			input[type=text] {
+				font-size: 150%;
+				font-weight: bolder;
+				padding-top: .5%;
+				padding-bottom: .5%;
+				border-top: none;
+				border-left: none;
+				border-right: none;
+				border-bottom: 2px solid #000;
+				background-color: transparent;
+				color: #000;
+			}
+
+			#banner-container {
+				position: absolute;
+				color: #000;
+				margin-left: 5%;
+				margin-top: -18%;
+			}
+
+			#banner-container h1 {
+				font-weight: bolder;
+				font-size: 500%;
+			}
+
+			#banner-container p {
+				font-weight: bolder;
+				margin-left: 1%;
+				padding-bottom: 1%;
+				border-bottom: 3px solid #000;
+			}
+
+			#task-complete-box {
+				text-align: center;
+				margin-top: 20%;
+
+				-wsebkit-transition: all .3s ease;
+				-moz-transition: all .3s ease;
+				-ms-transition: all .3s ease;
+				-o-transition: all .3s ease;
+				transition: .3s ease;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id = "wrapper">
+			<div id = "banner-container">
+				<h1> TASK-LIST </h1>
+				<p> finish your damn sh*t </p>
+			</div>
+
+			<div id = "list-container">
+				<ul id = "list-container-ul">
+
+				</ul>
+			</div>
+
+			<div id = "input-container">
+				<input id = "user-input" type = "text" autofocus>
+				<button id = "enter"> upload </button>
+				<button id = "clear"> clear all </button>
+			</div>
+		</div>
+
+		<script type = "text/javascript">
+			var user_input = document.getElementById("user-input");
+			var enter_btn = document.getElementById("enter");
+			var clear_btn = document.getElementById("clear");
+			var list_container = document.getElementById("list-container-ul");
+			var alpha = /^[A-Za-z]+$/;
+
+			var liArr = localStorage.getItem("listitems") ? JSON.parse(localStorage.getItem("listitems")) : [];
+			localStorage.setItem("listitems", JSON.stringify(liArr));
+			var li_saved = JSON.parse(localStorage.getItem("listitems"));
+
+			function additem(text) {
+				var li_elem = document.createElement("li");
+
+				li_elem.textContent = text;
+
+				if (li_elem.textContent.length == 0 ) {
+
+					console.log("empty li");
+
+				} else {
+
+					list_container.appendChild(li_elem);
+				}
+			}
+
+			enter_btn.onmousedown = function(event) {
+
+				liArr.push(user_input.value);
+				localStorage.setItem("listitems", JSON.stringify(liArr));
+
+				additem(user_input.value);
+
+				user_input.value = " ";
+			}
+
+			clear_btn.onmousedown = function(event) {
+
+				localStorage.removeItem("listitems");
+				list_container.innerHTML = "";
+			}
+
+			var select_li;
+
+			document.getElementById("list-container-ul").onclick = function(event) {
+
+				console.log(event.target);
+
+				select_li = event.target;
+				console.log(select_li);
+				
+
+				for (var i = 0; i < liArr.length; i++) {
+					if (select_li.innerHTML == liArr[i]) {
+						console.log("hit");
+
+						var index = liArr.indexOf(select_li.innerHTML);
+						liArr.splice(index, 1);
+						console.log(index);
+					}
+				}
+			}
+
+			document.onkeypress = function(event) {
+
+				if (event.keyCode === 13) {
+
+					liArr.push(user_input.value);
+					localStorage.setItem("listitems", JSON.stringify(liArr));
+
+					additem(user_input.value);
+
+					user_input.value = " ";
+				}	
+			}
+
+			li_saved.forEach(function(item) {
+
+				additem(item);
+			});
+		</script>
+	</body>
+</html>
